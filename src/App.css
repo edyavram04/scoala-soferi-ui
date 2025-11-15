@@ -1,38 +1,204 @@
 .App {
-  text-align: center;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ocupă tot ecranul pe înălțime */
+    background-color: #f0f2f5; /* Un gri deschis pentru fundal */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.login-container {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* O umbră subtilă */
+    width: 350px;
+    box-sizing: border-box; /* Asigură că padding-ul nu strică lățimea */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #333;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
 }
 
-.App-link {
-  color: #61dafb;
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Asigură că padding-ul nu strică lățimea */
+}
+
+button {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff; /* Un albastru plăcut */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+    background-color: #0056b3; /* O culoare mai închisă la hover */
+}
+
+.error-message {
+    color: #D8000C; /* Roșu */
+    background-color: #FFD2D2; /* Roz deschis */
+    border: 1px solid #D8000C;
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+/* ... stilurile tale existente pentru login ... */
+
+.elevi-page-container {
+    width: 90%;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.elevi-table {
+    width: 100%;
+    border-collapse: collapse; /* Linii de tabel curate */
+    margin-top: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.elevi-table th,
+.elevi-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.elevi-table th {
+    background-color: #f4f4f4; /* Un gri deschis pentru antet */
+    color: #333;
+}
+
+/* Colorează rândurile alternativ */
+.elevi-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.elevi-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.elevi-table button {
+    padding: 6px 10px;
+    margin-right: 5px;
+    font-size: 0.9rem;
+    background-color: #007bff; /* Albastru */
+    color: white;
+}
+
+/* Buton de ștergere */
+.elevi-table button:last-child {
+    background-color: #dc3545; /* Roșu */
+}
+
+.add-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-bottom: 1rem;
+    background-color: #28a745; /* Verde */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.add-button:hover {
+    background-color: #218838;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Stilizăm select (dropdown) ca pe input */
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white; /* Asigură fundal alb */
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.form-buttons button {
+    width: 48%; /* Butoanele împart spațiul */
+}
+
+.form-buttons .cancel-button {
+    background-color: #6c757d; /* Gri */
+}
+.form-buttons .cancel-button:hover {
+    background-color: #5a6268;
+}
+.elevi-table .edit-button,
+.elevi-table .delete-button {
+    display: block; /* (1) Le facem să ocupe tot rândul (le va pune unul sub altul) */
+    width: 100%;    /* (2) Le forțăm să aibă lățime 100% din celula tabelului */
+    padding: 6px 10px;
+    margin-bottom: 5px; /* (3) Adăugăm spațiu între ele */
+    font-size: 0.9rem;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    box-sizing: border-box; /* (4) Asigură că padding-ul nu strică lățimea */
+    text-align: center;     /* (5) Centrează textul în buton */
+}
+
+/* Scoatem marginea de jos de la ultimul buton din celulă */
+.elevi-table td button:last-child,
+.elevi-table td a:last-child {
+    margin-bottom: 0;
+}
+
+.elevi-table .edit-button {
+    background-color: #007bff; /* Albastru */
+}
+
+.elevi-table .delete-button {
+    background-color: #dc3545; /* Roșu */
 }
