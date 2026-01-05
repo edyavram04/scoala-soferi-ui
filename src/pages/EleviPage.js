@@ -57,6 +57,11 @@ function EleviPage() {
 
     return (
         <div className="elevi-page-container">
+            {/* --- BUTONUL NOU PENTRU MENIU --- */}
+            <Link to="/meniu" className="back-button">
+                ⬅ Meniu Principal
+            </Link>
+
             <h1>Gestiune Elevi</h1>
 
             <Link to="/elevi/nou" className="add-button">
@@ -65,7 +70,14 @@ function EleviPage() {
 
             <table className="elevi-table">
                 <thead>
-                {/* ... (antetul tabelului) ... */}
+                <tr>
+                    <th>ID</th>
+                    <th>Nume</th>
+                    <th>Prenume</th>
+                    <th>Telefon</th>
+                    <th>Instructor</th>
+                    <th>Acțiuni</th>
+                </tr>
                 </thead>
                 <tbody>
                 {elevi.map(elev => (
@@ -76,7 +88,6 @@ function EleviPage() {
                         <td>{elev.telefon}</td>
                         <td>{elev.instructor ? elev.instructor.nume : 'N/A'}</td>
                         <td>
-                            {/* (2) AICI E MODIFICAREA: Schimbă <button> în <Link> */}
                             <Link to={`/elevi/edit/${elev.id}`} className="edit-button">
                                 Modifică
                             </Link>

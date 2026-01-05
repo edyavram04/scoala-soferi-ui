@@ -202,3 +202,76 @@ button:hover {
 .elevi-table .delete-button {
     background-color: #dc3545; /* Roșu */
 }
+
+/* Butonul de întoarcere la Meniu */
+.back-button {
+    display: inline-block;
+    background-color: #6c757d; /* Gri neutru */
+    color: white;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 20px; /* Spațiu sub el */
+    font-weight: bold;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+/* Stil pentru Meniul Principal */
+.meniu-container {
+    text-align: center;
+    padding: 50px;
+}
+
+.meniu-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.meniu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 100px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    padding: 10px;
+}
+
+.meniu-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-5px); /* Efect de ridicare */
+}
+
+/* Butonul mare pentru Înscrieri */
+.btn-mare {
+    background-color: #28a745; /* Verde */
+    width: 100%; /* Ocupă tot rândul de sus */
+    font-size: 22px;
+}
+
+.btn-mare:hover {
+    background-color: #218838;
+}
+
+.logout-btn {
+    color: red;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid red;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
