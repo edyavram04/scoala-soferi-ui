@@ -1,277 +1,398 @@
-.App {
-    text-align: center;
+/* --- 1. Stiluri Generale & Reset --- */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f8f9fa; /* Gri foarte deschis, curat */
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+    color: #2c3e50; /* Albastru închis corporate */
+}
+
+a {
+    text-decoration: none;
+}
+
+/* --- 2. BARA DE SUS (NAVBAR) --- */
+.navbar {
+    width: 100%;
+    height: 70px;
+    background-color: #1a252f; /* Albastru marin foarte închis */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    color: white;
+    position: fixed; /* Rămâne sus la scroll */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.brand-logo {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #ecf0f1;
+}
+
+.brand-accent {
+    color: #3498db; /* Accent albastru deschis */
+}
+
+.logout-btn-nav {
+    color: #ecf0f1;
+    font-weight: 600;
+    border: 1px solid #e74c3c;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.logout-btn-nav:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* --- 3. DASHBOARD / MENIU PRINCIPAL --- */
+.dashboard-container {
+    margin-top: 90px; /* Spațiu pentru bara fixă */
+    padding: 20px 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dashboard-section-title {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: 40px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.menu-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.nav-card {
+    flex: 1 1 300px;
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #34495e;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-left: 5px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.nav-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.nav-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+    color: #2c3e50;
+}
+
+.nav-card p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Culori bordură carduri */
+.card-green { border-left-color: #27ae60; }
+.card-blue { border-left-color: #2980b9; }
+.card-purple { border-left-color: #8e44ad; }
+.card-orange { border-left-color: #d35400; }
+
+/* --- 4. PAGINI GENERALE (CONTAINER) --- */
+.elevi-page-container {
+    margin-top: 90px;
+    width: 90%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 50px;
+}
+
+/* --- 5. TABELE --- */
+.elevi-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden; /* Pt colțuri rotunjite */
+}
+
+.elevi-table th,
+.elevi-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.elevi-table th {
+    background-color: #f1f2f6;
+    color: #57606f;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.elevi-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* --- 6. BUTOANE ACTIUNI TABEL --- */
+.elevi-table .edit-button,
+.elevi-table .delete-button {
+    display: inline-flex; /* Folosim flex pentru centrare perfectă */
+    justify-content: center;
+    align-items: center;
+
+    width: 90px; /* Lățime fixă pentru ambele! */
+    height: 35px; /* Înălțime fixă */
+    padding: 0; /* Scoatem padding-ul variabil */
+
+    margin-right: 8px; /* Spațiu între ele */
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    border-radius: 4px;
+    border: none; /* Scoate bordura default de la button */
+    cursor: pointer;
+    text-decoration: none; /* Scoate sublinierea de la link */
+    box-sizing: border-box; /* Include bordura în dimensiune */
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.elevi-table .edit-button {
+    background-color: #3498db; /* Albastru */
+}
+
+.elevi-table .edit-button:hover {
+    background-color: #2980b9;
+}
+
+.elevi-table .delete-button {
+    background-color: #e74c3c; /* Roșu */
+}
+
+.elevi-table .delete-button:hover {
+    background-color: #c0392b;
+}
+
+/* Efect de apăsare */
+.elevi-table .edit-button:active,
+.elevi-table .delete-button:active {
+    transform: scale(0.98);
+}
+
+/* --- 7. FORMULARE (LOGIN & ADD/EDIT) --- */
+.App { /* Login Container Wrapper */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Ocupă tot ecranul pe înălțime */
-    background-color: #f0f2f5; /* Un gri deschis pentru fundal */
+    height: 100vh;
+    background-color: #ecf0f1;
 }
 
 .login-container {
-    background: #ffffff;
-    padding: 2rem;
+    background: white;
+    padding: 2.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* O umbră subtilă */
-    width: 350px;
-    box-sizing: border-box; /* Asigură că padding-ul nu strică lățimea */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 380px;
 }
 
-h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    color: #333;
+.form-container {
+    max-width: 700px;
+    margin: 100px auto 2rem auto; /* 100px sus ca să nu intre sub navbar */
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .form-group {
     margin-bottom: 1.5rem;
-    text-align: left;
 }
 
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #555;
+    font-weight: 600;
+    color: #34495e;
 }
 
-.form-group input {
+.form-group input, .form-group select {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
     border-radius: 4px;
-    box-sizing: border-box; /* Asigură că padding-ul nu strică lățimea */
+    box-sizing: border-box;
+    font-size: 1rem;
 }
 
-button {
-    width: 100%;
-    padding: 0.75rem;
+/* --- UPDATE AICI: BUTOANE GEMENE --- */
+.form-buttons {
+    display: flex; /* Le pune unul lângă altul */
+    gap: 15px;     /* Spațiu între ele */
+    margin-top: 2rem;
+}
+
+/* Stil comun pentru AMBELE butoane (Salvează și Anulează) */
+.form-buttons button,
+.form-buttons .cancel-button {
+    flex: 1; /* TRUCUL MAGIC: Ambele ocupă exact 50% din lățime */
+
+    display: inline-flex; /* Centrare perfectă a textului */
+    justify-content: center;
+    align-items: center;
+
+    padding: 0; /* Resetăm padding pt că avem height fix */
+    height: 45px; /* Înălțime fixă pentru ambele */
+
     border: none;
     border-radius: 4px;
-    background-color: #007bff; /* Un albastru plăcut */
-    color: white;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+    text-decoration: none; /* Scoate sublinierea de la link */
+    box-sizing: border-box; /* Include bordura în dimensiune */
+    transition: background-color 0.2s, transform 0.1s;
+    width: auto; /* Resetăm width 100% de la login */
 }
 
-button:hover {
-    background-color: #0056b3; /* O culoare mai închisă la hover */
-}
-
-.error-message {
-    color: #D8000C; /* Roșu */
-    background-color: #FFD2D2; /* Roz deschis */
-    border: 1px solid #D8000C;
-    border-radius: 4px;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-}
-
-/* ... stilurile tale existente pentru login ... */
-
-.elevi-page-container {
-    width: 90%;
-    margin: 2rem auto;
-    padding: 1rem;
-}
-
-.elevi-table {
-    width: 100%;
-    border-collapse: collapse; /* Linii de tabel curate */
-    margin-top: 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.elevi-table th,
-.elevi-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-}
-
-.elevi-table th {
-    background-color: #f4f4f4; /* Un gri deschis pentru antet */
-    color: #333;
-}
-
-/* Colorează rândurile alternativ */
-.elevi-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.elevi-table tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-.elevi-table button {
-    padding: 6px 10px;
-    margin-right: 5px;
-    font-size: 0.9rem;
-    background-color: #007bff; /* Albastru */
+/* Culori Specifice */
+.form-buttons button {
+    background-color: #2980b9; /* Albastru pentru Salvează */
     color: white;
 }
 
-/* Buton de ștergere */
-.elevi-table button:last-child {
-    background-color: #dc3545; /* Roșu */
+.form-buttons .cancel-button {
+    background-color: #95a5a6; /* Gri pentru Anulează */
+    color: white;
+}
+
+/* Hover Effects */
+.form-buttons button:hover { background-color: #2471a3; }
+.form-buttons .cancel-button:hover { background-color: #7f8c8d; }
+
+/* Click Effect */
+.form-buttons button:active,
+.form-buttons .cancel-button:active {
+    transform: scale(0.98);
+}
+
+/* Stil generic pentru butonul de Login (ca să nu fie stricat de modificarea de mai sus) */
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.login-container button:hover { background-color: #2471a3; }
+
+
+/* --- 8. STATISTICI --- */
+.stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 20px;
+    width: 350px;
+    border-top: 4px solid #3498db;
+}
+
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+.mini-table th {
+    font-size: 0.8rem;
+    color: #95a5a6;
+    text-transform: uppercase;
+    border-bottom: 1px solid #ecf0f1;
+}
+.mini-table td {
+    padding: 10px 5px;
+    border-bottom: 1px solid #f5f6fa;
+    color: #2c3e50;
+}
+
+/* --- 9. BUTOANE DIVERSE --- */
+.back-button {
+    display: inline-block;
+    color: #7f8c8d;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid #bdc3c7;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.back-button:hover {
+    background-color: #ecf0f1;
+    color: #2c3e50;
 }
 
 .add-button {
     display: inline-block;
     padding: 10px 20px;
-    margin-bottom: 1rem;
-    background-color: #28a745; /* Verde */
+    background-color: #27ae60;
     color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-.add-button:hover {
-    background-color: #218838;
-}
-
-.form-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.form-container h1 {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-/* Stilizăm select (dropdown) ca pe input */
-.form-group select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
-    background-color: white; /* Asigură fundal alb */
-}
-
-.form-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-}
-
-.form-buttons button {
-    width: 48%; /* Butoanele împart spațiul */
-}
-
-.form-buttons .cancel-button {
-    background-color: #6c757d; /* Gri */
-}
-.form-buttons .cancel-button:hover {
-    background-color: #5a6268;
-}
-.elevi-table .edit-button,
-.elevi-table .delete-button {
-    display: block; /* (1) Le facem să ocupe tot rândul (le va pune unul sub altul) */
-    width: 100%;    /* (2) Le forțăm să aibă lățime 100% din celula tabelului */
-    padding: 6px 10px;
-    margin-bottom: 5px; /* (3) Adăugăm spațiu între ele */
-    font-size: 0.9rem;
-    color: white;
+    font-weight: 600;
     text-decoration: none;
+}
+.add-button:hover { background-color: #219150; }
+
+.error-message {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    border: 1px solid #D8000C;
     border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    box-sizing: border-box; /* (4) Asigură că padding-ul nu strică lățimea */
-    text-align: center;     /* (5) Centrează textul în buton */
-}
-
-/* Scoatem marginea de jos de la ultimul buton din celulă */
-.elevi-table td button:last-child,
-.elevi-table td a:last-child {
-    margin-bottom: 0;
-}
-
-.elevi-table .edit-button {
-    background-color: #007bff; /* Albastru */
-}
-
-.elevi-table .delete-button {
-    background-color: #dc3545; /* Roșu */
-}
-
-/* Butonul de întoarcere la Meniu */
-.back-button {
-    display: inline-block;
-    background-color: #6c757d; /* Gri neutru */
-    color: white;
-    padding: 8px 15px;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-bottom: 20px; /* Spațiu sub el */
-    font-weight: bold;
-}
-
-.back-button:hover {
-    background-color: #5a6268;
-}
-/* Stil pentru Meniul Principal */
-.meniu-container {
-    text-align: center;
-    padding: 50px;
-}
-
-.meniu-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.meniu-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 200px;
-    height: 100px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
-    transition: transform 0.2s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    text-align: center;
     padding: 10px;
-}
-
-.meniu-btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-5px); /* Efect de ridicare */
-}
-
-/* Butonul mare pentru Înscrieri */
-.btn-mare {
-    background-color: #28a745; /* Verde */
-    width: 100%; /* Ocupă tot rândul de sus */
-    font-size: 22px;
-}
-
-.btn-mare:hover {
-    background-color: #218838;
-}
-
-.logout-btn {
-    color: red;
-    text-decoration: none;
-    font-weight: bold;
-    border: 1px solid red;
-    padding: 10px 20px;
-    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
 }
