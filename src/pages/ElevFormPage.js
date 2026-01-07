@@ -6,8 +6,9 @@ import '../App.css';
 function ElevFormPage() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const isEditMode = Boolean(id);
 
-    // 1. Am scos CNP-ul din starea inițială
+    // 1. Starea formularului
     const [formData, setFormData] = useState({
         nume: '',
         prenume: '',
@@ -19,7 +20,7 @@ function ElevFormPage() {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        // Încărcăm lista de instructori
+        // A. Încărcăm lista de instructori pentru dropdown
         const fetchInstructori = async () => {
             try {
                 const res = await axios.get('http://localhost:8080/api/instructori');
@@ -30,102 +31,76 @@ function ElevFormPage() {
         };
         fetchInstructori();
 
-        // Încărcăm datele elevului (dacă e editare)
-        if (id) {
+        // B. Încărcăm datele elevului (Dacă e Editare)
+        if (isEditMode) {
             const fetchElev = async () => {
                 try {
                     const res = await axios.get(`http://localhost:8080/api/elevi/${id}`);
                     const data = res.data;
 
-                    // Logica de siguranță pentru instructor
-                    let instructorGasit = '';
+                    // Logică pentru a extrage corect ID-ul instructorului
+                    let instructorId = '';
                     if (data.instructor && data.instructor.id) {
-                        instructorGasit = data.instructor.id;
-                    } else if (data.idInstructor) {
-                        instructorGasit = data.idInstructor;
+                        instructorId = data.instructor.id;
                     }
 
                     setFormData({
                         nume: data.nume || '',
                         prenume: data.prenume || '',
-                        // CNP a fost eliminat de aici
                         telefon: data.telefon || '',
-                        idInstructor: instructorGasit
+                        idInstructor: instructorId
                     });
-
                 } catch (err) {
                     console.error("Eroare la încărcare elev:", err);
+                    setErrors({ general: "Nu s-au putut încărca datele elevului." });
                 }
             };
             fetchElev();
         }
-    }, [id]);
+    }, [id, isEditMode]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+
+        // Ștergem eroarea roșie imediat ce utilizatorul modifică câmpul
         if (errors[e.target.name]) {
             setErrors({ ...errors, [e.target.name]: null });
         }
     };
 
-    const formatNume = (text) => {
-        if (!text) return "";
-        return text.split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join(' ');
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrors({}); // Resetăm erorile anterioare
 
-        // --- VALIDARE ---
-        const newErrors = {};
-        let isValid = true;
-        const numeRegex = /^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/;
-        const cifreRegex = /^[0-9]+$/;
+        // Pregătim datele. Nota: Backend-ul se așteaptă la un obiect Instructor, nu doar ID
+        // Dar depinde cum ai făcut DTO-ul. Dacă ai lăsat ca în controllerul meu,
+        // trebuie să trimitem structura corectă.
 
-        if (!formData.nume || !numeRegex.test(formData.nume)) {
-            newErrors.nume = "Nume invalid (doar litere).";
-            isValid = false;
-        }
-        if (!formData.prenume || !numeRegex.test(formData.prenume)) {
-            newErrors.prenume = "Prenume invalid (doar litere).";
-            isValid = false;
-        }
-
-        // Validarea pentru CNP a fost ștearsă
-
-        if (!formData.telefon || !cifreRegex.test(formData.telefon) || formData.telefon.length < 10) {
-            newErrors.telefon = "Telefon invalid (minim 10 cifre).";
-            isValid = false;
-        }
-        if (!formData.idInstructor) {
-            newErrors.idInstructor = "Alege un instructor!";
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        if (!isValid) return;
-
-        // --- TRIMITERE DATE ---
         const dateDeTrimis = {
-            nume: formatNume(formData.nume),
-            prenume: formatNume(formData.prenume),
-            // Nu mai trimitem CNP la server
+            nume: formData.nume,
+            prenume: formData.prenume,
             telefon: formData.telefon,
+            // Java așteaptă un obiect: instructor: { id: ... }
             instructor: { id: parseInt(formData.idInstructor) }
         };
 
         try {
-            if (id) {
+            if (isEditMode) {
                 await axios.put(`http://localhost:8080/api/elevi/${id}`, dateDeTrimis);
             } else {
                 await axios.post('http://localhost:8080/api/elevi', dateDeTrimis);
             }
             navigate('/elevi');
         } catch (err) {
-            console.error(err);
-            setErrors({ general: "Eroare la salvare! Verifică consola." });
+            console.error("Eroare API:", err);
+
+            // --- INTERCEPTARE ERORI BACKEND (VALIDARE) ---
+            if (err.response && err.response.status === 400) {
+                // Backend-ul trimite map-ul de erori (ex: {nume: "...", telefon: "..."})
+                setErrors(err.response.data);
+            } else {
+                setErrors({ general: "A apărut o eroare la salvare. Verifică conexiunea." });
+            }
         }
     };
 
@@ -133,33 +108,62 @@ function ElevFormPage() {
 
     return (
         <div className="form-container">
-            <h1>{id ? 'Modifică Elev' : 'Adaugă Elev Nou'}</h1>
-            {errors.general && <div className="error-message">{errors.general}</div>}
+            <h1>{isEditMode ? 'Modifică Elev' : 'Adaugă Elev Nou'}</h1>
+
+            {errors.general && (
+                <div className="error-message">{errors.general}</div>
+            )}
 
             <form onSubmit={handleSubmit}>
+                {/* --- NUME --- */}
                 <div className="form-group">
                     <label>Nume:</label>
-                    <input type="text" name="nume" value={formData.nume} onChange={handleChange} style={errors.nume ? {borderColor:'red'} : {}} />
+                    <input
+                        type="text"
+                        name="nume"
+                        value={formData.nume}
+                        onChange={handleChange}
+                        style={errors.nume ? {borderColor:'red'} : {}}
+                    />
                     {errors.nume && <div style={errorStyle}>{errors.nume}</div>}
                 </div>
 
+                {/* --- PRENUME --- */}
                 <div className="form-group">
                     <label>Prenume:</label>
-                    <input type="text" name="prenume" value={formData.prenume} onChange={handleChange} style={errors.prenume ? {borderColor:'red'} : {}} />
+                    <input
+                        type="text"
+                        name="prenume"
+                        value={formData.prenume}
+                        onChange={handleChange}
+                        style={errors.prenume ? {borderColor:'red'} : {}}
+                    />
                     {errors.prenume && <div style={errorStyle}>{errors.prenume}</div>}
                 </div>
 
-                {/* Câmpul CNP a fost șters complet din HTML */}
-
+                {/* --- TELEFON --- */}
                 <div className="form-group">
                     <label>Telefon:</label>
-                    <input type="text" name="telefon" value={formData.telefon} onChange={handleChange} style={errors.telefon ? {borderColor:'red'} : {}} />
+                    <input
+                        type="text"
+                        name="telefon"
+                        value={formData.telefon}
+                        onChange={handleChange}
+                        placeholder="07xxxxxxxx"
+                        style={errors.telefon ? {borderColor:'red'} : {}}
+                    />
                     {errors.telefon && <div style={errorStyle}>{errors.telefon}</div>}
                 </div>
 
+                {/* --- INSTRUCTOR --- */}
                 <div className="form-group">
                     <label>Instructor:</label>
-                    <select name="idInstructor" value={formData.idInstructor} onChange={handleChange} style={errors.idInstructor ? {borderColor:'red'} : {}}>
+                    <select
+                        name="idInstructor"
+                        value={formData.idInstructor}
+                        onChange={handleChange}
+                        style={errors.instructor ? {borderColor:'red'} : {}}
+                    >
                         <option value="">-- Alege un Instructor --</option>
                         {instructori.map(instr => (
                             <option key={instr.id} value={instr.id}>
@@ -167,15 +171,16 @@ function ElevFormPage() {
                             </option>
                         ))}
                     </select>
-                    {errors.idInstructor && <div style={errorStyle}>{errors.idInstructor}</div>}
+                    {/* Backend-ul s-ar putea să trimită eroarea pe cheia "instructor" fiind obiect */}
+                    {errors.instructor && <div style={errorStyle}>{errors.instructor}</div>}
                 </div>
 
+                {/* --- BUTOANE GEMENE --- */}
                 <div className="form-buttons">
                     <button type="submit">
-                        {id ? 'Salvează Modificările' : 'Adaugă Elev'}
+                        {isEditMode ? 'Salvează' : 'Adaugă'}
                     </button>
 
-                    {/* AM MODIFICAT AICI: Fără style={{...}}, doar className */}
                     <Link to="/elevi" className="cancel-button">
                         Anulează
                     </Link>
