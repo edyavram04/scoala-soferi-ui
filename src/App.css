@@ -1,33 +1,43 @@
 /* --- 1. Stiluri Generale & Reset --- */
+:root {
+    --primary-color: #4e54c8;  /* Albastru movuliu modern */
+    --secondary-color: #8f94fb; /* Gradient light */
+    --accent-green: #00b09b;
+    --accent-red: #ff5f6d;
+    --dark-bg: #1f2937;
+    --light-bg: #f3f4f6;
+    --text-color: #374151;
+    --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 body {
     margin: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f8f9fa; /* Gri foarte deschis, curat */
-    color: #333;
+    font-family: 'Poppins', sans-serif; /* Fontul nou! */
+    background-color: var(--light-bg);
+    color: var(--text-color);
     -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3 {
     margin-top: 0;
-    color: #2c3e50; /* Albastru închis corporate */
+    color: #111827;
+    font-weight: 700;
 }
 
-a {
-    text-decoration: none;
-}
+a { text-decoration: none; transition: 0.3s; }
 
-/* --- 2. BARA DE SUS (NAVBAR) --- */
+/* --- 2. BARA DE SUS (NAVBAR CU GRADIENT) --- */
 .navbar {
     width: 100%;
     height: 70px;
-    background-color: #1a252f; /* Albastru marin foarte închis */
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); /* Gradient! */
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 40px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 20px rgba(78, 84, 200, 0.3);
     color: white;
-    position: fixed; /* Rămâne sus la scroll */
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
@@ -35,101 +45,75 @@ a {
 }
 
 .brand-logo {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #ecf0f1;
-}
-
-.brand-accent {
-    color: #3498db; /* Accent albastru deschis */
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .logout-btn-nav {
-    color: #ecf0f1;
-    font-weight: 600;
-    border: 1px solid #e74c3c;
-    padding: 8px 16px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 50px; /* Buton rotund */
     font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(5px);
 }
 
 .logout-btn-nav:hover {
-    background-color: #e74c3c;
-    color: white;
+    background: white;
+    color: var(--primary-color);
 }
 
-/* --- 3. DASHBOARD / MENIU PRINCIPAL --- */
+/* --- 3. DASHBOARD / CARDURI --- */
 .dashboard-container {
-    margin-top: 90px; /* Spațiu pentru bara fixă */
+    margin-top: 100px;
     padding: 20px 40px;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
 }
 
-.dashboard-section-title {
-    font-size: 1.1rem;
-    color: #7f8c8d;
-    border-bottom: 2px solid #ecf0f1;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    margin-top: 40px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 700;
-}
-
 .menu-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 25px;
+    gap: 30px;
 }
 
 .nav-card {
     flex: 1 1 300px;
     background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: #34495e;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border-left: 5px solid transparent;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    padding: 30px;
+    border-radius: 15px;
+    color: var(--text-color);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid white;
+    position: relative;
+    overflow: hidden;
 }
 
 .nav-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.nav-card h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.3rem;
-    color: #2c3e50;
-}
+.nav-card h3 { font-size: 1.4rem; margin-bottom: 10px; }
+.nav-card p { color: #6b7280; font-size: 0.95rem; }
 
-.nav-card p {
-    margin: 0;
-    color: #7f8c8d;
-    font-size: 0.95rem;
-    line-height: 1.4;
-}
+/* Borduri colorate subtile */
+.card-green { border-top: 5px solid var(--accent-green); }
+.card-blue { border-top: 5px solid var(--primary-color); }
+.card-purple { border-top: 5px solid #9b59b6; }
+.card-orange { border-top: 5px solid #e67e22; }
 
-/* Culori bordură carduri */
-.card-green { border-left-color: #27ae60; }
-.card-blue { border-left-color: #2980b9; }
-.card-purple { border-left-color: #8e44ad; }
-.card-orange { border-left-color: #d35400; }
-
-/* --- 4. PAGINI GENERALE (CONTAINER) --- */
+/* --- 4. TABELE PROFESIONALE --- */
 .elevi-page-container {
-    margin-top: 90px;
+    margin-top: 100px;
     width: 90%;
     max-width: 1200px;
     margin-left: auto;
@@ -137,262 +121,382 @@ a {
     padding-bottom: 50px;
 }
 
-/* --- 5. TABELE --- */
 .elevi-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 0;
     background-color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    overflow: hidden; /* Pt colțuri rotunjite */
-}
-
-.elevi-table th,
-.elevi-table td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
+    box-shadow: var(--shadow-card);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 25px;
 }
 
 .elevi-table th {
-    background-color: #f1f2f6;
-    color: #57606f;
-    font-weight: 700;
+    background-color: #f9fafb;
+    color: #6b7280;
+    font-weight: 600;
     text-transform: uppercase;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 18px 24px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.elevi-table tbody tr:hover {
-    background-color: #f8f9fa;
+.elevi-table td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #1f2937;
+    font-size: 0.95rem;
 }
 
-/* --- 6. BUTOANE ACTIUNI TABEL --- */
+.elevi-table tbody tr:last-child td { border-bottom: none; }
+.elevi-table tbody tr:hover { background-color: #f9fafb; }
+
+/* --- 5. BUTOANE CU ICONIȚE --- */
 .elevi-table .edit-button,
 .elevi-table .delete-button {
-    display: inline-flex; /* Folosim flex pentru centrare perfectă */
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-
-    width: 90px; /* Lățime fixă pentru ambele! */
-    height: 35px; /* Înălțime fixă */
-    padding: 0; /* Scoatem padding-ul variabil */
-
-    margin-right: 8px; /* Spațiu între ele */
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: white;
-    border-radius: 4px;
-    border: none; /* Scoate bordura default de la button */
+    width: 40px; /* Butoane pătrate/rotunde */
+    height: 40px;
+    border-radius: 50%; /* Rotunde complet */
+    border: none;
     cursor: pointer;
-    text-decoration: none; /* Scoate sublinierea de la link */
-    box-sizing: border-box; /* Include bordura în dimensiune */
-    transition: background-color 0.2s, transform 0.1s;
+    color: white;
+    transition: transform 0.2s, opacity 0.2s;
+    margin-right: 8px;
+    font-size: 0.9rem;
 }
 
 .elevi-table .edit-button {
-    background-color: #3498db; /* Albastru */
-}
-
-.elevi-table .edit-button:hover {
-    background-color: #2980b9;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 6px rgba(118, 75, 162, 0.3);
 }
 
 .elevi-table .delete-button {
-    background-color: #e74c3c; /* Roșu */
+    background: linear-gradient(135deg, #ff5f6d 0%, #ffc371 100%);
+    box-shadow: 0 4px 6px rgba(255, 95, 109, 0.3);
 }
 
+.elevi-table .edit-button:hover,
 .elevi-table .delete-button:hover {
-    background-color: #c0392b;
+    transform: scale(1.1);
+    opacity: 0.9;
 }
 
-/* Efect de apăsare */
-.elevi-table .edit-button:active,
-.elevi-table .delete-button:active {
-    transform: scale(0.98);
-}
-
-/* --- 7. FORMULARE (LOGIN & ADD/EDIT) --- */
-.App { /* Login Container Wrapper */
-    display: flex;
-    justify-content: center;
+/* Butonul mare de ADAUGĂ */
+.add-button {
+    display: inline-flex;
     align-items: center;
-    height: 100vh;
-    background-color: #ecf0f1;
-}
-
-.login-container {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    width: 380px;
-}
-
-.form-container {
-    max-width: 700px;
-    margin: 100px auto 2rem auto; /* 100px sus ca să nu intre sub navbar */
-    padding: 2rem;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+    border-radius: 50px;
     font-weight: 600;
-    color: #34495e;
+    box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+    transition: transform 0.2s;
+}
+.add-button:hover { transform: translateY(-2px); }
+
+/* --- 6. FORMULARE --- */
+.form-container {
+    max-width: 600px;
+    margin: 120px auto 50px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .form-group input, .form-group select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #bdc3c7;
-    border-radius: 4px;
-    box-sizing: border-box;
+    padding: 12px 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px; /* Inputuri mai rotunjite */
     font-size: 1rem;
+    transition: border-color 0.2s;
+    background-color: #f9fafb;
+    box-sizing: border-box;
 }
 
-/* --- UPDATE AICI: BUTOANE GEMENE --- */
-.form-buttons {
-    display: flex; /* Le pune unul lângă altul */
-    gap: 15px;     /* Spațiu între ele */
-    margin-top: 2rem;
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: white;
 }
 
-/* Stil comun pentru AMBELE butoane (Salvează și Anulează) */
-.form-buttons button,
-.form-buttons .cancel-button {
-    flex: 1; /* TRUCUL MAGIC: Ambele ocupă exact 50% din lățime */
+.form-group label {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
 
-    display: inline-flex; /* Centrare perfectă a textului */
+/* Butoane Formular Gemene */
+.form-buttons { display: flex; gap: 20px; margin-top: 30px; }
+
+.form-buttons button, .form-buttons .cancel-button {
+    flex: 1;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-
-    padding: 0; /* Resetăm padding pt că avem height fix */
-    height: 45px; /* Înălțime fixă pentru ambele */
-
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
+    height: 50px;
+    border-radius: 12px;
     font-weight: 600;
+    border: none;
     cursor: pointer;
-    text-decoration: none; /* Scoate sublinierea de la link */
-    box-sizing: border-box; /* Include bordura în dimensiune */
-    transition: background-color 0.2s, transform 0.1s;
-    width: auto; /* Resetăm width 100% de la login */
+    font-size: 1rem;
+    transition: 0.3s;
 }
 
-/* Culori Specifice */
 .form-buttons button {
-    background-color: #2980b9; /* Albastru pentru Salvează */
+    background: var(--primary-color);
     color: white;
+    box-shadow: 0 4px 12px rgba(78, 84, 200, 0.3);
 }
 
 .form-buttons .cancel-button {
-    background-color: #95a5a6; /* Gri pentru Anulează */
-    color: white;
+    background: #e5e7eb;
+    color: #374151;
 }
 
-/* Hover Effects */
-.form-buttons button:hover { background-color: #2471a3; }
-.form-buttons .cancel-button:hover { background-color: #7f8c8d; }
+.form-buttons button:hover { background: #373b8c; transform: translateY(-2px); }
+.form-buttons .cancel-button:hover { background: #d1d5db; }
 
-/* Click Effect */
-.form-buttons button:active,
-.form-buttons .cancel-button:active {
-    transform: scale(0.98);
-}
-
-/* Stil generic pentru butonul de Login (ca să nu fie stricat de modificarea de mai sus) */
-.login-container button {
-    width: 100%;
+/* Mesaj eroare */
+.error-message {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
     padding: 12px;
-    background-color: #2980b9;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* --- LOGIN PAGE SPECIFIC --- */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-header {
+    margin-bottom: 30px;
+}
+
+.login-header i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.login-header h2 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.login-header p {
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+/* Input cu Iconiță */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px 12px 45px; /* Padding stânga mare pt iconiță */
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: all 0.3s;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(78, 84, 200, 0.1);
+}
+
+.input-group input:focus + .input-icon {
+    color: var(--primary-color);
+}
+
+/* Buton Login */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
 }
-.login-container button:hover { background-color: #2471a3; }
 
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(78, 84, 200, 0.3);
+}
 
-/* --- 8. STATISTICI --- */
-.stats-grid {
+.login-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --- NAVBAR UPDATED - CENTRU & DROPDOWN --- */
+
+/* Containerul din mijloc pentru link-uri */
+.navbar-center {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 30px;
+    gap: 10px;
+    height: 100%;
+    align-items: center;
 }
 
-.stat-card {
-    background: white;
+/* Link-urile din meniu */
+.nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    padding: 8px 16px;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    padding: 20px;
-    width: 350px;
-    border-top: 4px solid #3498db;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative; /* Necesar pentru dropdown */
+    height: 40px; /* Înălțime fixă pentru aliniere */
 }
 
-.mini-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-.mini-table th {
-    font-size: 0.8rem;
-    color: #95a5a6;
-    text-transform: uppercase;
-    border-bottom: 1px solid #ecf0f1;
-}
-.mini-table td {
-    padding: 10px 5px;
-    border-bottom: 1px solid #f5f6fa;
-    color: #2c3e50;
-}
-
-/* --- 9. BUTOANE DIVERSE --- */
-.back-button {
-    display: inline-block;
-    color: #7f8c8d;
-    text-decoration: none;
-    font-weight: 600;
-    margin-bottom: 20px;
-    border: 1px solid #bdc3c7;
-    padding: 6px 12px;
-    border-radius: 4px;
-    transition: all 0.2s;
-}
-.back-button:hover {
-    background-color: #ecf0f1;
-    color: #2c3e50;
-}
-
-.add-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #27ae60;
+.nav-link:hover, .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
     color: white;
-    border-radius: 4px;
-    font-weight: 600;
-    text-decoration: none;
 }
-.add-button:hover { background-color: #219150; }
 
-.error-message {
-    color: #D8000C;
-    background-color: #FFD2D2;
-    border: 1px solid #D8000C;
-    border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 15px;
+/* --- LOGICA DROPDOWN (Meniu Derulant) --- */
+.dropdown-container {
+    position: relative; /* Părintele relativ */
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-menu {
+    display: none; /* Ascuns default */
+    position: absolute;
+    top: 50px; /* Imediat sub navbar */
+    left: 0;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-direction: column;
+    z-index: 2000;
+    animation: fadeIn 0.2s ease;
+}
+
+/* Când treci cu mouse-ul peste container, arată meniul */
+.dropdown-container:hover .dropdown-menu {
+    display: flex;
+}
+
+/* Link-urile din interiorul Dropdown-ului */
+.dropdown-item {
+    color: #374151; /* Gri închis */
+    padding: 12px 20px;
+    text-decoration: none;
     font-size: 0.9rem;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: #f9fafb;
+    color: var(--primary-color);
+    padding-left: 25px; /* Mică animație la hover */
+}
+
+.dropdown-item:last-child { border-bottom: none; }
+
+/* Săgeata mică de lângă Administrare */
+.arrow-icon {
+    font-size: 0.7rem;
+    margin-left: 3px;
+    transition: transform 0.3s;
+}
+
+.dropdown-container:hover .arrow-icon {
+    transform: rotate(180deg);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* --- BUTON SHOW/HIDE PASSWORD --- */
+
+/* Ajustăm input-ul ca să aibă loc și în dreapta */
+.input-group input {
+    /* Padding: Sus Dreapta Jos Stânga */
+    padding: 12px 45px 12px 45px !important;
+}
+
+/* Stil pentru iconița din dreapta (Ochiul) */
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 1.1rem;
+    cursor: pointer; /* Mânuță la hover */
+    z-index: 10;
+    transition: color 0.3s;
+}
+
+.toggle-password:hover {
+    color: var(--primary-color);
 }

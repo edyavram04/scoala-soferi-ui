@@ -5,6 +5,7 @@ import '../App.css';
 
 function InscrieriPage() {
     const [inscrieri, setInscrieri] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     // Listele pentru Dropdown-uri
     const [elevi, setElevi] = useState([]);
@@ -20,26 +21,27 @@ function InscrieriPage() {
     const [dataStart, setDataStart] = useState('');
     const [starePlata, setStarePlata] = useState('Neplatit');
 
-    // Încărcăm datele
     const fetchData = async () => {
         try {
-            const rInscrieri = await axios.get('http://localhost:8080/api/inscrieri');
+            setLoading(true);
+            const [rInscrieri, rElevi, rCursuri, rInstr, rMasini] = await Promise.all([
+                axios.get('http://localhost:8080/api/inscrieri'),
+                axios.get('http://localhost:8080/api/elevi'),
+                axios.get('http://localhost:8080/api/cursuri'),
+                axios.get('http://localhost:8080/api/instructori'),
+                axios.get('http://localhost:8080/api/masini')
+            ]);
+
             setInscrieri(rInscrieri.data);
-
-            const rElevi = await axios.get('http://localhost:8080/api/elevi');
             setElevi(rElevi.data);
-
-            const rCursuri = await axios.get('http://localhost:8080/api/cursuri');
             setCursuri(rCursuri.data);
-
-            const rInstr = await axios.get('http://localhost:8080/api/instructori');
-            console.log("DATE INSTRUCTORI PRIMITE:", rInstr.data); // <--- Verificăm în consolă
             setInstructori(rInstr.data);
-
-            const rMasini = await axios.get('http://localhost:8080/api/masini');
             setMasini(rMasini.data);
         } catch (e) {
             console.error("Eroare server", e);
+            alert("Nu s-au putut încărca datele. Verifică backend-ul.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -50,10 +52,7 @@ function InscrieriPage() {
         const idElevSelectat = parseInt(e.target.value);
         setSelElev(idElevSelectat);
 
-        // Căutăm elevul în lista descărcată
         const elevGasit = elevi.find(el => el.id === idElevSelectat);
-
-        // Dacă are instructor, îl punem automat în dropdown
         if (elevGasit && elevGasit.instructor) {
             setSelInstr(elevGasit.instructor.id);
         } else {
@@ -74,89 +73,120 @@ function InscrieriPage() {
 
         try {
             await axios.post('http://localhost:8080/api/inscrieri', payload);
-            alert("Salvat cu succes! (Și elevul a fost actualizat)");
+            alert("Înscriere salvată cu succes!");
             fetchData();
-            // Resetare parțială
-            setSelElev(''); setSelCurs(''); setSelInstr(''); setSelMasina('');
+            // Resetare
+            setSelElev(''); setSelCurs(''); setSelInstr(''); setSelMasina(''); setDataStart('');
         } catch (err) {
             alert("Eroare la salvare! Verifică toate câmpurile.");
         }
     };
 
     const handleDelete = async (idElev, idCurs) => {
-        if(window.confirm("Ștergi înregistrarea?")) {
-            await axios.delete(`http://localhost:8080/api/inscrieri?idElev=${idElev}&idCurs=${idCurs}`);
-            fetchData();
+        if(window.confirm("Ești sigur că vrei să ștergi această înscriere?")) {
+            try {
+                await axios.delete(`http://localhost:8080/api/inscrieri?idElev=${idElev}&idCurs=${idCurs}`);
+                fetchData();
+            } catch (err) {
+                alert("Eroare la ștergere.");
+            }
         }
     };
 
+    // Funcție mică pentru culoarea statusului
+    const getStatusStyle = (status) => {
+        if (status === 'Achitat') return { background: '#d1fae5', color: '#065f46', padding: '5px 10px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600' };
+        if (status === 'Avans') return { background: '#fef3c7', color: '#92400e', padding: '5px 10px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600' };
+        return { background: '#fee2e2', color: '#991b1b', padding: '5px 10px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600' };
+    };
+
+    if (loading) return <div className="App">Se încarcă datele...</div>;
+
     return (
         <div className="elevi-page-container" style={{maxWidth: '1200px'}}>
-            <Link to="/meniu" className="back-button">⬅ Meniu</Link>
-            <h1>Registru Înscrieri & Sincronizare</h1>
 
-            <div className="form-container" style={{maxWidth: '100%', display: 'flex', flexWrap: 'wrap', gap: '15px'}}>
-                <h3 style={{width: '100%'}}>Adaugă Înscriere Nouă</h3>
+            <Link to="/meniu" className="back-button">
+                <i className="fa-solid fa-arrow-left"></i> Meniu Principal
+            </Link>
 
-                {/* 1. ELEV */}
-                <div style={{flex: '1 1 200px'}}>
-                    <label>Elev:</label>
-                    <select value={selElev} onChange={handleSelectElev} required style={{width:'100%', padding:'8px'}}>
-                        <option value="">-- Alege Elev --</option>
-                        {elevi.map(e => (
-                            <option key={e.id} value={e.id}>{e.nume} {e.prenume}</option>
-                        ))}
-                    </select>
-                </div>
+            <h1><i className="fa-solid fa-file-signature"></i> Registru Înscrieri & Sincronizare</h1>
 
-                {/* 2. INSTRUCTOR */}
-                <div style={{flex: '1 1 200px'}}>
-                    <label>Instructor:</label>
-                    <select value={selInstr} onChange={e=>setSelInstr(e.target.value)} required style={{width:'100%', padding:'8px', backgroundColor: '#f8f9fa'}}>
-                        <option value="">-- Alege Instructor --</option>
-                        {instructori.map(i => (
-                            <option key={i.id} value={i.id}>{i.nume} {i.prenume}</option>
-                        ))}
-                    </select>
-                </div>
+            {/* --- FORMULAR TIP CARD --- */}
+            <div className="form-container" style={{maxWidth: '100%', marginTop: '30px', padding: '30px'}}>
+                <h3 style={{borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '20px'}}>
+                    <i className="fa-solid fa-plus-circle" style={{color: 'var(--primary-color)'}}></i> Adaugă Înscriere Nouă
+                </h3>
 
-                {/* 3. CURS */}
-                <div style={{flex: '1 1 200px'}}>
-                    <label>Tip Curs:</label>
-                    <select value={selCurs} onChange={e=>setSelCurs(e.target.value)} required style={{width:'100%', padding:'8px'}}>
-                        <option value="">-- Alege Curs --</option>
-                        {cursuri.map(c => <option key={c.idCurs} value={c.idCurs}>{c.denumire}</option>)}
-                    </select>
-                </div>
+                <form onSubmit={handleSave}>
+                    {/* Grid Layout pentru Formular */}
+                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px'}}>
 
-                {/* 4. MASINA */}
-                <div style={{flex: '1 1 200px'}}>
-                    <label>Mașina:</label>
-                    <select value={selMasina} onChange={e=>setSelMasina(e.target.value)} required style={{width:'100%', padding:'8px'}}>
-                        <option value="">-- Alege Mașina --</option>
-                        {masini.map(m => <option key={m.nrInmatriculare} value={m.nrInmatriculare}>{m.marca} - {m.nrInmatriculare}</option>)}
-                    </select>
-                </div>
+                        {/* 1. ELEV */}
+                        <div className="form-group">
+                            <label><i className="fa-solid fa-user-graduate"></i> Elev:</label>
+                            <select value={selElev} onChange={handleSelectElev} required>
+                                <option value="">-- Alege Elev --</option>
+                                {elevi.map(e => (
+                                    <option key={e.id} value={e.id}>{e.nume} {e.prenume}</option>
+                                ))}
+                            </select>
+                        </div>
 
-                {/* 5. DATA */}
-                <div style={{flex: '1 1 150px'}}>
-                    <label>Data Start:</label>
-                    <input type="date" value={dataStart} onChange={e=>setDataStart(e.target.value)} required style={{width:'100%', padding:'8px'}}/>
-                </div>
+                        {/* 2. INSTRUCTOR */}
+                        <div className="form-group">
+                            <label><i className="fa-solid fa-user-tie"></i> Instructor:</label>
+                            <select value={selInstr} onChange={e=>setSelInstr(e.target.value)} required style={{backgroundColor: '#f9fafb'}}>
+                                <option value="">-- Alege Instructor --</option>
+                                {instructori.map(i => (
+                                    <option key={i.id} value={i.id}>{i.nume} {i.prenume}</option>
+                                ))}
+                            </select>
+                        </div>
 
-                {/* 6. PLATA */}
-                <div style={{flex: '1 1 150px'}}>
-                    <label>Plată:</label>
-                    <select value={starePlata} onChange={e=>setStarePlata(e.target.value)} style={{width:'100%', padding:'8px'}}>
-                        <option value="Neplatit">Neplătit</option>
-                        <option value="Avans">Avans</option>
-                        <option value="Achitat">Achitat</option>
-                    </select>
-                </div>
+                        {/* 3. CURS */}
+                        <div className="form-group">
+                            <label><i className="fa-solid fa-book"></i> Tip Curs:</label>
+                            <select value={selCurs} onChange={e=>setSelCurs(e.target.value)} required>
+                                <option value="">-- Alege Curs --</option>
+                                {cursuri.map(c => <option key={c.idCurs} value={c.idCurs}>{c.denumire}</option>)}
+                            </select>
+                        </div>
 
-                <button onClick={handleSave} style={{width: '100%', marginTop: '10px'}}>Salvează și Sincronizează</button>
+                        {/* 4. MASINA */}
+                        <div className="form-group">
+                            <label><i className="fa-solid fa-car"></i> Mașina:</label>
+                            <select value={selMasina} onChange={e=>setSelMasina(e.target.value)} required>
+                                <option value="">-- Alege Mașina --</option>
+                                {masini.map(m => <option key={m.nrInmatriculare} value={m.nrInmatriculare}>{m.marca} ({m.nrInmatriculare})</option>)}
+                            </select>
+                        </div>
+
+                        {/* 5. DATA */}
+                        <div className="form-group">
+                            <label><i className="fa-solid fa-calendar-days"></i> Data Start:</label>
+                            <input type="date" value={dataStart} onChange={e=>setDataStart(e.target.value)} required/>
+                        </div>
+
+                        {/* 6. PLATA */}
+                        <div className="form-group">
+                            <label><i className="fa-solid fa-money-bill-wave"></i> Status Plată:</label>
+                            <select value={starePlata} onChange={e=>setStarePlata(e.target.value)}>
+                                <option value="Neplatit">Neplătit</option>
+                                <option value="Avans">Avans</option>
+                                <option value="Achitat">Achitat</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="form-buttons" style={{marginTop: '20px'}}>
+                        <button type="submit" className="add-button" style={{justifyContent: 'center', width: '100%'}}>
+                            <i className="fa-solid fa-check"></i> Salvează și Sincronizează
+                        </button>
+                    </div>
+                </form>
             </div>
 
+            {/* --- TABEL DATE --- */}
             <table className="elevi-table">
                 <thead>
                 <tr>
@@ -164,31 +194,50 @@ function InscrieriPage() {
                     <th>Curs</th>
                     <th>Instructor</th>
                     <th>Mașina</th>
-                    <th>Data</th>
-                    <th>Plată</th>
+                    <th>Data Start</th>
+                    <th>Status Plată</th>
                     <th>Acțiuni</th>
                 </tr>
                 </thead>
                 <tbody>
                 {inscrieri.map((item, idx) => (
                     <tr key={idx}>
-                        <td>{item.elev?.nume} {item.elev?.prenume}</td>
+                        <td style={{fontWeight: '500'}}>{item.elev?.nume} {item.elev?.prenume}</td>
                         <td>{item.curs?.denumire}</td>
-                        <td>{item.instructor ? `${item.instructor.nume} ${item.instructor.prenume}` : '-'}</td>
-                        <td>{item.masina ? `${item.masina.marca} (${item.masina.nrInmatriculare})` : '-'}</td>
+                        <td>
+                            {item.instructor ? (
+                                <span><i className="fa-solid fa-user-tie" style={{color:'#9ca3af', marginRight:'5px'}}></i>{item.instructor.nume} {item.instructor.prenume}</span>
+                            ) : '-'}
+                        </td>
+                        <td>
+                            {item.masina ? (
+                                <span style={{fontSize:'0.9rem'}}><i className="fa-solid fa-car-side" style={{color:'#9ca3af', marginRight:'5px'}}></i>{item.masina.marca} <small>({item.masina.nrInmatriculare})</small></span>
+                            ) : '-'}
+                        </td>
                         <td>{item.dataStart}</td>
-                        <td style={{fontWeight: 'bold', color: item.starePlata==='Achitat'?'green':'red'}}>
-                            {item.starePlata}
+                        <td>
+                            <span style={getStatusStyle(item.starePlata)}>
+                                {item.starePlata}
+                            </span>
                         </td>
                         <td>
                             <button
                                 className="delete-button"
-                                onClick={() => handleDelete(item.id.idElev, item.id.idCurs)}>
-                                Șterge
+                                onClick={() => handleDelete(item.id.idElev, item.id.idCurs)}
+                                title="Șterge Înscrierea"
+                            >
+                                <i className="fa-solid fa-trash"></i>
                             </button>
                         </td>
                     </tr>
                 ))}
+                {inscrieri.length === 0 && (
+                    <tr>
+                        <td colSpan="7" style={{textAlign: 'center', padding: '20px', color: '#6b7280'}}>
+                            Nu există înscrieri înregistrate.
+                        </td>
+                    </tr>
+                )}
                 </tbody>
             </table>
         </div>

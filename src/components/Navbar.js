@@ -1,31 +1,65 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import '../App.css'; // Asigură-te că importă stilurile
+import '../App.css';
 
 function Navbar() {
     const location = useLocation();
 
-    // Lista de rute unde NU vrem să apară bara (ex: Login)
+    // Ascundem bara pe pagina de Login și Root
     if (location.pathname === '/login' || location.pathname === '/') {
         return null;
     }
 
+    // Funcție simplă pentru a verifica dacă un link e activ (pentru stilizare)
+    const isActive = (path) => location.pathname.startsWith(path) ? 'active' : '';
+
     return (
         <nav className="navbar">
+            {/* 1. ZONA STÂNGA: LOGO */}
             <Link to="/meniu" className="brand-logo">
-                Ready<span className="brand-accent">2</span>Drive
+                <i className="fa-solid fa-car-side"></i> Ready2Drive
             </Link>
 
-            <div className="nav-links">
-                {/* Putem adăuga un buton mic de "Meniu" dacă ești pe alte pagini */}
-                {location.pathname !== '/meniu' && (
-                    <Link to="/meniu" className="logout-btn-nav" style={{marginRight: '10px', borderColor: '#3498db'}}>
-                         Meniu
-                    </Link>
-                )}
+            {/* 2. ZONA CENTRU: MENIURILE PRINCIPALE */}
+            <div className="navbar-center">
 
+                {/* Buton Înscrieri */}
+                <Link to="/inscrieri" className={`nav-link ${isActive('/inscrieri')}`}>
+                    <i className="fa-solid fa-file-signature"></i> Înscrieri
+                </Link>
+
+                {/* Buton Statistici */}
+                <Link to="/statistici" className={`nav-link ${isActive('/statistici')}`}>
+                    <i className="fa-solid fa-chart-pie"></i> Statistici
+                </Link>
+
+                {/* --- DROPDOWN ADMINISTRARE --- */}
+                <div className="dropdown-container">
+                    {/* Capul listei (nu e link, e doar declanșator vizual, dar poate duce la meniu) */}
+                    <Link to="/meniu" className={`nav-link ${isActive('/elevi') || isActive('/instructori') || isActive('/masini') ? 'active' : ''}`}>
+                        <i className="fa-solid fa-database"></i> Administrare <i className="fa-solid fa-chevron-down arrow-icon"></i>
+                    </Link>
+
+                    {/* Lista care apare la hover */}
+                    <div className="dropdown-menu">
+                        <Link to="/elevi" className="dropdown-item">
+                            <i className="fa-solid fa-user-graduate" style={{color: '#3498db'}}></i> Elevi
+                        </Link>
+                        <Link to="/instructori" className="dropdown-item">
+                            <i className="fa-solid fa-user-tie" style={{color: '#2980b9'}}></i> Instructori
+                        </Link>
+                        <Link to="/masini" className="dropdown-item">
+                            <i className="fa-solid fa-car" style={{color: '#d35400'}}></i> Parc Auto
+                        </Link>
+                    </div>
+                </div>
+
+            </div>
+
+            {/* 3. ZONA DREAPTA: LOGOUT */}
+            <div className="nav-links">
                 <Link to="/login" className="logout-btn-nav">
-                    Deconectare
+                    <i className="fa-solid fa-right-from-bracket"></i> Ieșire
                 </Link>
             </div>
         </nav>

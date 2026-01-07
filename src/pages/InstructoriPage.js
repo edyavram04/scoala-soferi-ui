@@ -10,11 +10,14 @@ function InstructoriPage() {
 
     const fetchInstructori = async () => {
         try {
+            // Resetăm eroarea la fiecare nouă încercare
+            setError('');
             const response = await axios.get('http://localhost:8080/api/instructori');
             setInstructori(response.data);
-            setLoading(false);
         } catch (err) {
-            setError('Nu s-au putut încărca instructorii.');
+            console.error(err);
+            setError('Nu s-au putut încărca instructorii. Verifică serverul.');
+        } finally {
             setLoading(false);
         }
     };
@@ -27,27 +30,30 @@ function InstructoriPage() {
         if (window.confirm('Ești sigur că vrei să ștergi acest instructor?')) {
             try {
                 await axios.delete(`http://localhost:8080/api/instructori/${id}`);
-                fetchInstructori();
+                fetchInstructori(); // Reîmprospătăm lista
             } catch (err) {
-                alert('Eroare: Nu se poate șterge instructorul (posibil are elevi).');
+                alert('Eroare: Nu se poate șterge instructorul. Probabil are elevi sau mașini alocate.');
             }
         }
     };
 
-    if (loading) return <div className="loading">Se încarcă...</div>;
-    if (error) return <div className="error-message">{error}</div>;
+    if (loading) return <div className="App">Se încarcă lista de instructori...</div>;
+    if (error) return <div className="App" style={{color: 'red'}}>{error}</div>;
 
     return (
         <div className="elevi-page-container">
-            {/* --- BUTONUL NOU PENTRU MENIU --- */}
+
+            {/* Buton Înapoi cu Iconiță */}
             <Link to="/meniu" className="back-button">
-                ⬅ Meniu Principal
+                <i className="fa-solid fa-arrow-left"></i> Meniu Principal
             </Link>
 
-            <h1>Gestiune Instructori</h1>
+            {/* Titlu cu Iconiță specifică (User Tie) */}
+            <h1><i className="fa-solid fa-user-tie"></i> Gestiune Instructori</h1>
 
+            {/* Buton Adăugare Modern */}
             <Link to="/instructori/nou" className="add-button">
-                Adaugă Instructor Nou
+                <i className="fa-solid fa-plus"></i> Adaugă Instructor Nou
             </Link>
 
             <table className="elevi-table">
@@ -56,7 +62,7 @@ function InstructoriPage() {
                     <th>ID</th>
                     <th>Nume</th>
                     <th>Prenume</th>
-                    <th>CNP</th> {/* Am păstrat coloana CNP */}
+                    <th>CNP</th>
                     <th>Telefon</th>
                     <th>Acțiuni</th>
                 </tr>
@@ -65,16 +71,27 @@ function InstructoriPage() {
                 {instructori.map(instr => (
                     <tr key={instr.id}>
                         <td>{instr.id}</td>
-                        <td>{instr.nume}</td>
-                        <td>{instr.prenume}</td>
-                        <td>{instr.cnp}</td> {/* Am păstrat afișarea CNP */}
+                        <td style={{fontWeight: '500'}}>{instr.nume}</td>
+                        <td style={{fontWeight: '500'}}>{instr.prenume}</td>
+                        <td style={{fontFamily: 'monospace', letterSpacing: '1px'}}>{instr.cnp}</td>
                         <td>{instr.telefon}</td>
-                        <td>
-                            <Link to={`/instructori/edit/${instr.id}`} className="edit-button">
-                                Modifică
+
+                        {/* Butoane de Acțiune Rotunde */}
+                        <td style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Link
+                                to={`/instructori/edit/${instr.id}`}
+                                className="edit-button"
+                                title="Modifică Instructor"
+                            >
+                                <i className="fa-solid fa-pen"></i>
                             </Link>
-                            <button onClick={() => handleDelete(instr.id)} className="delete-button">
-                                Șterge
+
+                            <button
+                                onClick={() => handleDelete(instr.id)}
+                                className="delete-button"
+                                title="Șterge Instructor"
+                            >
+                                <i className="fa-solid fa-trash"></i>
                             </button>
                         </td>
                     </tr>

@@ -1,72 +1,106 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify'; // <--- Importăm Toast pentru notificări
 import '../App.css';
 
 function EleviPage() {
     const [elevi, setElevi] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
 
-    // 1. Am mutat funcția de "fetch"
-    //    pentru a o putea apela din nou după ștergere
+    // 1. State pentru textul de căutare
+    const [searchTerm, setSearchTerm] = useState('');
+
     const fetchElevi = async () => {
         try {
             setLoading(true);
-            setError('');
             const response = await axios.get('http://localhost:8080/api/elevi');
             setElevi(response.data);
         } catch (err) {
             console.error("Eroare la preluarea elevilor:", err);
-            setError('Nu s-au putut prelua datele elevilor.');
+            toast.error("Nu s-au putut prelua datele elevilor. 🔴");
         } finally {
             setLoading(false);
         }
     };
 
-    // useEffect rulează funcția o dată la încărcare
     useEffect(() => {
         fetchElevi();
     }, []);
 
-    // 2. Funcția nouă pentru ȘTERGERE
     const handleDelete = async (idElev) => {
-        // Adăugăm o confirmare, ca să nu ștergem din greșeală
         if (window.confirm('Ești sigur că vrei să ștergi acest elev?')) {
             try {
-                // 3. Trimite cererea DELETE la backend
                 await axios.delete(`http://localhost:8080/api/elevi/${idElev}`);
-
-                // 4. Reîncarcă lista de elevi pentru a reflecta schimbarea
+                toast.success("Elev șters cu succes! 🗑️"); // Notificare Verde
                 fetchElevi();
-
             } catch (err) {
                 console.error("Eroare la ștergerea elevului:", err);
-                setError('Nu s-a putut șterge elevul.');
+                toast.error("Nu s-a putut șterge elevul. Poate are date asociate. ⚠️");
             }
         }
     };
 
-    // ... (părțile cu 'loading' și 'error' rămân la fel) ...
+    // 2. Logică de filtrare (Căutare)
+    // Verificăm dacă Numele SAU Prenumele conțin textul scris
+    const eleviFiltrati = elevi.filter(elev => {
+        if (searchTerm === "") return true; // Dacă nu e scris nimic, arată tot
+        const text = searchTerm.toLowerCase();
+        return (
+            elev.nume.toLowerCase().includes(text) ||
+            elev.prenume.toLowerCase().includes(text)
+        );
+    });
+
     if (loading) {
         return <div className="App">Se încarcă elevii...</div>;
-    }
-    if (error) {
-        return <div className="App" style={{ color: 'red' }}>{error}</div>;
     }
 
     return (
         <div className="elevi-page-container">
-            {/* --- BUTONUL NOU PENTRU MENIU --- */}
-            <Link to="/meniu" className="back-button">
-                ⬅ Meniu Principal
-            </Link>
+            {/* Header */}
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+                <Link to="/meniu" className="back-button">
+                    <i className="fa-solid fa-arrow-left"></i> Meniu
+                </Link>
+                <Link to="/elevi/nou" className="add-button">
+                    <i className="fa-solid fa-plus"></i> Adaugă Elev
+                </Link>
+            </div>
 
-            <h1>Gestiune Elevi</h1>
+            <div style={{textAlign: 'center', marginBottom: '30px'}}>
+                <h1><i className="fa-solid fa-user-graduate"></i> Gestiune Elevi</h1>
+            </div>
 
-            <Link to="/elevi/nou" className="add-button">
-                Adaugă Elev Nou
-            </Link>
+            {/* --- 3. BARA DE CĂUTARE MODERNĂ --- */}
+            <div style={{marginBottom: '25px', position: 'relative', maxWidth: '600px', margin: '0 auto 25px auto'}}>
+                <i className="fa-solid fa-magnifying-glass" style={{
+                    position: 'absolute',
+                    left: '20px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#9ca3af',
+                    fontSize: '1.1rem'
+                }}></i>
+                <input
+                    type="text"
+                    placeholder="Caută elev după nume sau prenume..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                        width: '100%',
+                        padding: '15px 20px 15px 50px', // Loc pentru iconiță
+                        borderRadius: '50px',
+                        border: '2px solid #e5e7eb',
+                        outline: 'none',
+                        fontSize: '1rem',
+                        transition: 'all 0.3s',
+                        boxShadow: '0 4px 6px rgba(0,0,0,0.02)'
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                />
+            </div>
 
             <table className="elevi-table">
                 <thead>
@@ -80,24 +114,53 @@ function EleviPage() {
                 </tr>
                 </thead>
                 <tbody>
-                {elevi.map(elev => (
-                    <tr key={elev.id}>
-                        <td>{elev.id}</td>
-                        <td>{elev.nume}</td>
-                        <td>{elev.prenume}</td>
-                        <td>{elev.telefon}</td>
-                        <td>{elev.instructor ? elev.instructor.nume : 'N/A'}</td>
-                        <td>
-                            <Link to={`/elevi/edit/${elev.id}`} className="edit-button">
-                                Modifică
-                            </Link>
+                {/* 4. Mapăm prin lista FILTRATĂ, nu cea completă */}
+                {eleviFiltrati.length > 0 ? (
+                    eleviFiltrati.map(elev => (
+                        <tr key={elev.id}>
+                            <td style={{fontWeight: 'bold', color: '#6b7280'}}>#{elev.id}</td>
+                            <td style={{fontWeight: '500'}}>{elev.nume}</td>
+                            <td style={{fontWeight: '500'}}>{elev.prenume}</td>
+                            <td style={{fontFamily: 'monospace'}}>{elev.telefon}</td>
+                            <td>
+                                {elev.instructor ? (
+                                    <span style={{display:'inline-flex', alignItems:'center', gap:'5px', background:'#f3f4f6', padding:'4px 10px', borderRadius:'15px', fontSize:'0.9rem'}}>
+                                        <i className="fa-solid fa-user-tie" style={{color:'#4e54c8'}}></i>
+                                        {elev.instructor.nume} {elev.instructor.prenume}
+                                    </span>
+                                ) : (
+                                    <span style={{color: '#9ca3af', fontStyle:'italic'}}>N/A</span>
+                                )}
+                            </td>
 
-                            <button onClick={() => handleDelete(elev.id)} className="delete-button">
-                                Șterge
-                            </button>
+                            <td style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <Link
+                                    to={`/elevi/edit/${elev.id}`}
+                                    className="edit-button"
+                                    title="Modifică Elev"
+                                >
+                                    <i className="fa-solid fa-pen"></i>
+                                </Link>
+
+                                <button
+                                    onClick={() => handleDelete(elev.id)}
+                                    className="delete-button"
+                                    title="Șterge Elev"
+                                >
+                                    <i className="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    ))
+                ) : (
+                    /* Mesaj dacă nu găsește nimic la căutare */
+                    <tr>
+                        <td colSpan="6" style={{textAlign: 'center', padding: '30px', color: '#9ca3af'}}>
+                            <i className="fa-solid fa-search" style={{fontSize: '2rem', marginBottom: '10px', display:'block'}}></i>
+                            Nu am găsit niciun elev conform căutării "{searchTerm}".
                         </td>
                     </tr>
-                ))}
+                )}
                 </tbody>
             </table>
         </div>
