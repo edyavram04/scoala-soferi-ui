@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 
-// Importăm componentele
+
 import Navbar from './components/Navbar';
 import LoginForm from './components/LoginForm';
 import EleviPage from "./pages/EleviPage";
@@ -14,12 +14,12 @@ import MasinaFormPage from './pages/MasinaFormPage';
 import InscrieriPage from './pages/InscrieriPage';
 import StatisticiPage from './pages/StatisticiPage';
 
-// --- COMPONENTA MENIU PRINCIPAL (DASHBOARD) ---
+//COMPONENTA MENIU PRINCIPAL (DASHBOARD)
 function MeniuPrincipal() {
     return (
         <div className="dashboard-container">
 
-            {/* Header Dashboard - Stil Corporate */}
+            {/* Header Dashboard */}
             <div style={{ borderBottom: '1px solid #e5e7eb', paddingBottom: '20px', marginBottom: '40px' }}>
                 <h1 style={{ fontSize: '2rem', marginBottom: '5px', display: 'flex', alignItems: 'center', gap: '15px' }}>
                     <i className="fa-solid fa-gauge-high" style={{ color: '#4e54c8' }}></i>

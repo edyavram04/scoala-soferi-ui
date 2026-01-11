@@ -20,7 +20,6 @@ function ElevFormPage() {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        // A. Încărcăm lista de instructori pentru dropdown
         const fetchInstructori = async () => {
             try {
                 const res = await axios.get('http://localhost:8080/api/instructori');
@@ -31,14 +30,12 @@ function ElevFormPage() {
         };
         fetchInstructori();
 
-        // B. Încărcăm datele elevului (Dacă e Editare)
         if (isEditMode) {
             const fetchElev = async () => {
                 try {
                     const res = await axios.get(`http://localhost:8080/api/elevi/${id}`);
                     const data = res.data;
 
-                    // Logică pentru a extrage corect ID-ul instructorului
                     let instructorId = '';
                     if (data.instructor && data.instructor.id) {
                         instructorId = data.instructor.id;
@@ -62,7 +59,6 @@ function ElevFormPage() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
 
-        // Ștergem eroarea roșie imediat ce utilizatorul modifică câmpul
         if (errors[e.target.name]) {
             setErrors({ ...errors, [e.target.name]: null });
         }
@@ -72,15 +68,11 @@ function ElevFormPage() {
         e.preventDefault();
         setErrors({}); // Resetăm erorile anterioare
 
-        // Pregătim datele. Nota: Backend-ul se așteaptă la un obiect Instructor, nu doar ID
-        // Dar depinde cum ai făcut DTO-ul. Dacă ai lăsat ca în controllerul meu,
-        // trebuie să trimitem structura corectă.
 
         const dateDeTrimis = {
             nume: formData.nume,
             prenume: formData.prenume,
             telefon: formData.telefon,
-            // Java așteaptă un obiect: instructor: { id: ... }
             instructor: { id: parseInt(formData.idInstructor) }
         };
 
@@ -94,9 +86,8 @@ function ElevFormPage() {
         } catch (err) {
             console.error("Eroare API:", err);
 
-            // --- INTERCEPTARE ERORI BACKEND (VALIDARE) ---
+            //  INTERCEPTARE ERORI BACKEND (VALIDARE)
             if (err.response && err.response.status === 400) {
-                // Backend-ul trimite map-ul de erori (ex: {nume: "...", telefon: "..."})
                 setErrors(err.response.data);
             } else {
                 setErrors({ general: "A apărut o eroare la salvare. Verifică conexiunea." });
@@ -115,7 +106,7 @@ function ElevFormPage() {
             )}
 
             <form onSubmit={handleSubmit}>
-                {/* --- NUME --- */}
+                {/* NUME*/}
                 <div className="form-group">
                     <label>Nume:</label>
                     <input
@@ -128,7 +119,7 @@ function ElevFormPage() {
                     {errors.nume && <div style={errorStyle}>{errors.nume}</div>}
                 </div>
 
-                {/* --- PRENUME --- */}
+                {/*PRENUME*/}
                 <div className="form-group">
                     <label>Prenume:</label>
                     <input
@@ -141,7 +132,7 @@ function ElevFormPage() {
                     {errors.prenume && <div style={errorStyle}>{errors.prenume}</div>}
                 </div>
 
-                {/* --- TELEFON --- */}
+                {/*TELEFON*/}
                 <div className="form-group">
                     <label>Telefon:</label>
                     <input
@@ -155,7 +146,7 @@ function ElevFormPage() {
                     {errors.telefon && <div style={errorStyle}>{errors.telefon}</div>}
                 </div>
 
-                {/* --- INSTRUCTOR --- */}
+                {/*INSTRUCTOR*/}
                 <div className="form-group">
                     <label>Instructor:</label>
                     <select
@@ -171,11 +162,10 @@ function ElevFormPage() {
                             </option>
                         ))}
                     </select>
-                    {/* Backend-ul s-ar putea să trimită eroarea pe cheia "instructor" fiind obiect */}
                     {errors.instructor && <div style={errorStyle}>{errors.instructor}</div>}
                 </div>
 
-                {/* --- BUTOANE GEMENE --- */}
+                {/*BUTOANE GEMENE*/}
                 <div className="form-buttons">
                     <button type="submit">
                         {isEditMode ? 'Salvează' : 'Adaugă'}

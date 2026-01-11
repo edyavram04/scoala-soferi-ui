@@ -6,9 +6,8 @@ import autoTable from 'jspdf-autotable'; // <--- FIX: Importăm funcția explici
 import '../App.css';
 
 function StatisticiPage() {
-    // =====================================================================
+
     // 1. STATE-URI PENTRU DATE
-    // =====================================================================
     const [statInstructori, setStatInstructori] = useState([]);
     const [statBani, setStatBani] = useState([]);
     const [statMasini, setStatMasini] = useState([]);
@@ -22,9 +21,8 @@ function StatisticiPage() {
 
     const [loading, setLoading] = useState(true);
 
-    // =====================================================================
+
     // 2. FETCH DATA
-    // =====================================================================
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -62,13 +60,11 @@ function StatisticiPage() {
         fetchData();
     }, []);
 
-    // =====================================================================
-    // 3. FUNCȚIE EXPORT PDF (REPARATĂ)
-    // =====================================================================
+
+    // 3. FUNCȚIE EXPORT PDF
     const exportPDF = () => {
         const doc = new jsPDF();
 
-        // Titlu Principal
         doc.setFontSize(20);
         doc.setTextColor(40, 40, 40);
         doc.text("Raport Activitate - Ready2Drive", 14, 20);
@@ -77,11 +73,9 @@ function StatisticiPage() {
         doc.setTextColor(100);
         doc.text(`Generat la: ${new Date().toLocaleString()}`, 14, 28);
 
-        let finalY = 35; // Cursorul vertical
+        let finalY = 35;
 
-        // Helper pentru adăugare tabel în PDF
         const addSection = (title, headers, data) => {
-            // Verificăm dacă mai e loc pe pagină
             if (finalY > 250) {
                 doc.addPage();
                 finalY = 20;
@@ -91,7 +85,6 @@ function StatisticiPage() {
             doc.setTextColor(0);
             doc.text(title, 14, finalY);
 
-            // --- FIX: Folosim autoTable(doc, { options }) ---
             autoTable(doc, {
                 startY: finalY + 5,
                 head: [headers],
@@ -99,12 +92,10 @@ function StatisticiPage() {
                 theme: 'grid',
                 headStyles: { fillColor: [78, 84, 200] },
                 didDrawPage: (data) => {
-                    // Update cursor after table draw
                     finalY = data.cursor.y + 15;
                 }
             });
 
-            // Alternativa pentru a actualiza finalY daca didDrawPage nu e triggeruit corect pe o singura pagina
             if (doc.lastAutoTable) {
                 finalY = doc.lastAutoTable.finalY + 15;
             }
@@ -119,9 +110,8 @@ function StatisticiPage() {
         doc.save('Raport_Ready2Drive.pdf');
     };
 
-    // =====================================================================
+
     // 4. RENDERING
-    // =====================================================================
     const renderListCard = (titlu, iconClass, colorClass, date, descriereValoare = "") => (
         <div className={`nav-card ${colorClass}`} style={{ cursor: 'default', minHeight: '300px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>

@@ -57,7 +57,7 @@ function MasiniPage() {
             {/* Titlu cu Iconiță */}
             <h1><i className="fa-solid fa-car"></i> Gestiune Parc Auto</h1>
 
-            {/* Buton Adăugare Modern */}
+            {/* Buton Adăugare*/}
             <Link to="/masini/nou" className="add-button">
                 <i className="fa-solid fa-plus"></i> Adaugă Mașină Nouă
             </Link>
@@ -98,7 +98,7 @@ function MasiniPage() {
                             {/* 3. Modelul */}
                             <td>{m.model}</td>
 
-                            {/* 4. Categoria - Badge elegant */}
+                            {/* 4. Categoria */}
                             <td>
                                 {m.categoriePermis ? (
                                     <span style={{

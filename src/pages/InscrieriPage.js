@@ -47,7 +47,7 @@ function InscrieriPage() {
 
     useEffect(() => { fetchData(); }, []);
 
-    // --- LOGICA UI: Auto-selectare Instructor ---
+    // Auto-selectare Instructor
     const handleSelectElev = (e) => {
         const idElevSelectat = parseInt(e.target.value);
         setSelElev(idElevSelectat);
@@ -93,7 +93,6 @@ function InscrieriPage() {
         }
     };
 
-    // Funcție mică pentru culoarea statusului
     const getStatusStyle = (status) => {
         if (status === 'Achitat') return { background: '#d1fae5', color: '#065f46', padding: '5px 10px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600' };
         if (status === 'Avans') return { background: '#fef3c7', color: '#92400e', padding: '5px 10px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600' };
@@ -186,7 +185,7 @@ function InscrieriPage() {
                 </form>
             </div>
 
-            {/* --- TABEL DATE --- */}
+            {/*TABEL DATE */}
             <table className="elevi-table">
                 <thead>
                 <tr>

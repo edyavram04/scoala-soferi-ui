@@ -5,12 +5,11 @@ import '../App.css';
 function Navbar() {
     const location = useLocation();
 
-    // Ascundem bara pe pagina de Login și Root
+
     if (location.pathname === '/login' || location.pathname === '/') {
         return null;
     }
 
-    // Funcție simplă pentru a verifica dacă un link e activ (pentru stilizare)
     const isActive = (path) => location.pathname.startsWith(path) ? 'active' : '';
 
     return (
@@ -33,9 +32,8 @@ function Navbar() {
                     <i className="fa-solid fa-chart-pie"></i> Statistici
                 </Link>
 
-                {/* --- DROPDOWN ADMINISTRARE --- */}
+                {/* DROPDOWN ADMINISTRARE*/}
                 <div className="dropdown-container">
-                    {/* Capul listei (nu e link, e doar declanșator vizual, dar poate duce la meniu) */}
                     <Link to="/meniu" className={`nav-link ${isActive('/elevi') || isActive('/instructori') || isActive('/masini') ? 'active' : ''}`}>
                         <i className="fa-solid fa-database"></i> Administrare <i className="fa-solid fa-chevron-down arrow-icon"></i>
                     </Link>
@@ -56,7 +54,7 @@ function Navbar() {
 
             </div>
 
-            {/* 3. ZONA DREAPTA: LOGOUT */}
+            {/*3. ZONA DREAPTA: LOGOUT */}
             <div className="nav-links">
                 <Link to="/login" className="logout-btn-nav">
                     <i className="fa-solid fa-right-from-bracket"></i> Ieșire

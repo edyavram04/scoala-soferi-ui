@@ -7,7 +7,7 @@ function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    // STARE NOUĂ: false = ascuns (default), true = vizibil
+
     const [showPassword, setShowPassword] = useState(false);
 
     const [error, setError] = useState('');

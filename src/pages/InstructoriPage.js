@@ -48,10 +48,10 @@ function InstructoriPage() {
                 <i className="fa-solid fa-arrow-left"></i> Meniu Principal
             </Link>
 
-            {/* Titlu cu Iconiță specifică (User Tie) */}
+            {/* Titlu cu Iconiță specifică */}
             <h1><i className="fa-solid fa-user-tie"></i> Gestiune Instructori</h1>
 
-            {/* Buton Adăugare Modern */}
+            {/* Buton Adăugare*/}
             <Link to="/instructori/nou" className="add-button">
                 <i className="fa-solid fa-plus"></i> Adaugă Instructor Nou
             </Link>

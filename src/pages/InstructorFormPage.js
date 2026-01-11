@@ -8,7 +8,7 @@ function InstructorFormPage() {
     const navigate = useNavigate();
     const isEditMode = Boolean(id);
 
-    // 1. Folosim un singur obiect pentru date
+    // 1.un singur obiect pentru date
     const [formData, setFormData] = useState({
         nume: '',
         prenume: '',
@@ -44,8 +44,6 @@ function InstructorFormPage() {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-
-        // Ștergem eroarea roșie imediat ce utilizatorul începe să corecteze câmpul
         if (errors[e.target.name]) {
             setErrors({ ...errors, [e.target.name]: null });
         }
@@ -65,18 +63,16 @@ function InstructorFormPage() {
         } catch (err) {
             console.error("Eroare API:", err);
 
-            // --- AICI PRINDEM ERORILE DE VALIDARE DIN JAVA ---
+            //PRINDEM ERORILE DE VALIDARE DIN JAVA
             if (err.response && err.response.status === 400) {
-                // Backend-ul trimite: { "cnp": "CNP invalid", "nume": "..." }
                 setErrors(err.response.data);
             } else {
-                // Eroare generică (server picat, etc.)
                 setErrors({ general: "A apărut o eroare la salvare. Verifică conexiunea." });
             }
         }
     };
 
-    // Stil pentru textul mic roșu
+
     const errorStyle = { color: '#e74c3c', fontSize: '0.85rem', marginTop: '5px' };
 
     return (
@@ -88,7 +84,7 @@ function InstructorFormPage() {
             )}
 
             <form onSubmit={handleSubmit}>
-                {/* --- NUME --- */}
+                {/*NUME*/}
                 <div className="form-group">
                     <label>Nume:</label>
                     <input
@@ -96,14 +92,12 @@ function InstructorFormPage() {
                         name="nume"
                         value={formData.nume}
                         onChange={handleChange}
-                        // Dacă există eroare pe acest câmp, facem chenarul roșu
                         style={errors.nume ? {borderColor: 'red'} : {}}
                     />
-                    {/* Afișăm mesajul venit din Java */}
                     {errors.nume && <div style={errorStyle}>{errors.nume}</div>}
                 </div>
 
-                {/* --- PRENUME --- */}
+                {/*PRENUME*/}
                 <div className="form-group">
                     <label>Prenume:</label>
                     <input
@@ -116,7 +110,7 @@ function InstructorFormPage() {
                     {errors.prenume && <div style={errorStyle}>{errors.prenume}</div>}
                 </div>
 
-                {/* --- CNP --- */}
+                {/*CNP*/}
                 <div className="form-group">
                     <label>CNP:</label>
                     <input
@@ -130,7 +124,7 @@ function InstructorFormPage() {
                     {errors.cnp && <div style={errorStyle}>{errors.cnp}</div>}
                 </div>
 
-                {/* --- TELEFON --- */}
+                {/*TELEFON*/}
                 <div className="form-group">
                     <label>Telefon:</label>
                     <input
@@ -143,13 +137,12 @@ function InstructorFormPage() {
                     {errors.telefon && <div style={errorStyle}>{errors.telefon}</div>}
                 </div>
 
-                {/* --- BUTOANE GEMENE (Stiluri din App.css) --- */}
+                {/*BUTOANE GEMENE (Stiluri din App.css)*/}
                 <div className="form-buttons">
                     <button type="submit">
                         {isEditMode ? 'Salvează' : 'Adaugă'}
                     </button>
 
-                    {/* Folosim Link cu clasa cancel-button pentru a fi identic cu butonul de salvare */}
                     <Link to="/instructori" className="cancel-button">
                         Anulează
                     </Link>

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import '../App.css';
 
 function MasinaFormPage() {
-    const { nr } = useParams(); // URL parameter
+    const { nr } = useParams();
     const isEditMode = Boolean(nr);
     const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ function MasinaFormPage() {
                     setMarca(res.data.marca);
                     setModel(res.data.model);
 
-                    // EXTRAGEM ID-ul DIN OBIECTUL CATEGORIE (dacă există)
+                    // EXTRAGEM ID-ul DIN OBIECTUL CATEGORIE
                     if (res.data.categoriePermis) {
                         setIdCategorie(res.data.categoriePermis.id);
                     }

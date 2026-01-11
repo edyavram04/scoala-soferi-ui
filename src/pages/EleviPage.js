@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify'; // <--- Importăm Toast pentru notificări
+import { toast } from 'react-toastify';
 import '../App.css';
 
 function EleviPage() {
@@ -42,7 +42,6 @@ function EleviPage() {
     };
 
     // 2. Logică de filtrare (Căutare)
-    // Verificăm dacă Numele SAU Prenumele conțin textul scris
     const eleviFiltrati = elevi.filter(elev => {
         if (searchTerm === "") return true; // Dacă nu e scris nimic, arată tot
         const text = searchTerm.toLowerCase();
@@ -72,7 +71,7 @@ function EleviPage() {
                 <h1><i className="fa-solid fa-user-graduate"></i> Gestiune Elevi</h1>
             </div>
 
-            {/* --- 3. BARA DE CĂUTARE MODERNĂ --- */}
+            {/*3. BARA DE CĂUTARE MODERNĂ*/}
             <div style={{marginBottom: '25px', position: 'relative', maxWidth: '600px', margin: '0 auto 25px auto'}}>
                 <i className="fa-solid fa-magnifying-glass" style={{
                     position: 'absolute',
@@ -153,7 +152,6 @@ function EleviPage() {
                         </tr>
                     ))
                 ) : (
-                    /* Mesaj dacă nu găsește nimic la căutare */
                     <tr>
                         <td colSpan="6" style={{textAlign: 'center', padding: '30px', color: '#9ca3af'}}>
                             <i className="fa-solid fa-search" style={{fontSize: '2rem', marginBottom: '10px', display:'block'}}></i>
